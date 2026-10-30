@@ -1,0 +1,33 @@
+# Java compiler output
+*.class
+bin/
+out/
+target/
+build/
+
+# IDE configurations
+.idea/
+*.iml
+.vscode/
+*.ipr
+*.iws
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Saves (preserve directory structure while ignoring local save data)
+saves/*
+!saves/.gitkeep
+
+# Assets (preserve directory structure while ignoring temporary files)
+assets/*
+!assets/.gitkeep
+
+# Logs and crash reports
+*.log
+hs_err_pid*
+
+# Antigravity configuration
+.agent/
