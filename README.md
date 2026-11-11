@@ -1,183 +1,141 @@
 # ORBIT: Beyond the Unknown
 
-> **A Terminal-Based Space Exploration & Survival Adventure**  
-> *Engineered in Pure Core Java (Java 17+)*
+> **Cinematic Sci-Fi Spacecraft Simulation & Planetary Exploration**  
+> *Engineered in Java 21 / libGDX 1.14.2 (LWJGL3)*
 
 ---
 
-## 1. Project Overview
+## 1. Official Windows Desktop Release (v1.0.0)
 
-**ORBIT: Beyond the Unknown** is a text-driven space exploration and survival game where the player takes command of the spacecraft **ODYSSEY-07** to investigate an unidentified deep-space transmission originating from an uncharted region of the galaxy.
+ORBIT is distributed as a completely self-contained, standalone Windows x64 application. It includes a bundled lightweight Java runtime and all required game assets—**no external Java installation, development environment, or build tools are required**.
 
-Unlike conventional console applications, ORBIT is built around an interactive terminal interface designed to evoke the aesthetic of an authentic spacecraft operating system, featuring:
-* Monospaced ASCII spacecraft art and borders
-* Multi-color ANSI terminal telemetry (cyan, blue, green, yellow, red, white, magenta)
-* Animated diagnostics, loading bars, thruster burns, and subsystem boot-up sequences
-* Robust input handling and resilient menu navigation
-* Real-time spacecraft telemetry, vitals tracking, and interplanetary travel
+### Release Package Information
+* **Package File**: `release/ORBIT-Windows-x64-v1.0.0.zip`
+* **Unpacked Directory**: `build/distribution/ORBIT/`
+* **Package Format**: Self-contained Windows x64 Application Image (ZIP archive, ~44.4 MB)
+* **Executable**: `ORBIT.exe` (Native 64-bit Windows launcher)
+* **Bundled Java Runtime**: OpenJDK 25 LTS (Microsoft build 25.0.3+9-LTS) modular runtime tailored via `jlink` (`runtime/`)
+* **Target OS**: Windows 10 / Windows 11 (64-bit)
+* **Display Output**: 1280x800 @ 60 FPS (OpenGL ES 2.0 / LWJGL3 hardware acceleration)
 
----
+### How to Run the Packaged Game
 
-## 2. Technology Constraints & Architecture
+1. **Extract Archive**: Extract `ORBIT-Windows-x64-v1.0.0.zip` to any folder on your computer.
+2. **Launch Game**:
+   * **Direct Executable**: Double-click `ORBIT.exe`.
+   * **Batch Launcher**: Double-click `Launch-ORBIT.bat`.
+   * **Console / Debug Launcher**: Run `Launch-Debug.bat` (outputs avionics telemetry and logs to a terminal window).
+3. **Command-Line Arguments** (supported via `Launch-Debug.bat` or `ORBIT.exe`):
+   * `--verify`: Executes the automated 11-step verification harness across all screens and campaign endings.
+   * `--endinga`: Launches the Ending A (Successful Return) cinematic preview.
+   * `--endingb`: Launches the Ending B (Lost in Space) cinematic preview.
+   * `--endingc`: Launches the Ending C (The Unknown) cinematic preview.
+   * `--nav`, `--cargo`, `--explore`, `--control`, `--log`, `--bridge`: Direct cinematic screen previews.
 
-* **Language**: Java 17 or newer (Tested on OpenJDK 25 LTS)
-* **Dependencies**: Core Java standard library only (zero external libraries)
-* **Build System**: Pure `javac` / `java` (no Maven/Gradle required)
-* **Platform Support**: Windows Terminal, PowerShell, CMD, Linux terminals, and macOS Terminal
-* **Interface**: 100% Terminal-based UI (TUI) with automatic ANSI detection and fallback
-
----
-
-## 3. Project Directory Structure
-
-```text
-Orbit/
-├── src/
-│   └── orbit/
-│       ├── Main.java              # Application entry point & top-level exception handling
-│       ├── Game.java              # Lifecycle controller, Navigation, Galaxy Map & Command Center
-│       ├── models/
-│       │   ├── Player.java        # Commander identity & vessel designation model
-│       │   ├── Spaceship.java     # Vitals (Fuel, O2, Energy, Hull) with 25% thresholding & clamping
-│       │   ├── Planet.java        # Planetary destination with discovery/exploration states
-│       │   ├── Inventory.java     # Cargo hold management for 5 resource items
-│       │   ├── ExplorationEvent.java # 12 planetary surface reconnaissance events across 4 categories
-│       │   ├── MissionObjective.java # 12 campaign objectives across 3 narrative stages
-│       │   ├── MissionLog.java    # Chronological flight recorder with audit trail and timestamps
-│       │   └── GameState.java     # Active session state: player, ship, planets, location, inventory & objectives
-│       └── ui/
-│           └── TerminalUI.java    # Central ANSI/ASCII rendering, progress bars & input engine
-├── assets/                        # Future ASCII art and static game assets (.gitkeep)
-├── saves/                         # Local mission telemetry and save files (.gitkeep)
-├── project.md                     # Comprehensive master game specification
-├── README.md                      # Project documentation and quickstart guide
-└── .gitignore                     # Git ignore rules for build artifacts and local saves
-```
+### Save Game Storage
+* **Location**: `./saves/orbit_save.dat` (relative to the `ORBIT.exe` directory).
+* **Format**: Deterministic human-readable INI telemetry format.
+* **Continuity**: Preserves Commander designation, vessel vitals (Fuel, O2, Energy, Hull Integrity), planetary discovery/exploration status, cargo supplies, campaign stage, and the complete chronological flight recorder.
 
 ---
 
-## 4. Current Status: Phase 6 (Mission Objectives, Campaign Progression & Mission Log)
+## 2. Game Overview & Features
 
-### Phase 1: Project Foundation (Completed)
-* [x] **Terminal UI Engine (`TerminalUI.java`)**: ANSI color palette, visible length centering, ASCII panels, progress animations, spinners, safe Scanner input handling.
-* [x] **Atmospheric Startup Sequence**: Cold-boot firmware diagnostics, ORBIT ASCII art title, subsystem power-on diagnostics.
-* [x] **Main Menu Loop**: Responsive options ([1] New Game, [2] Continue Game, [3] How to Play, [4] Credits, [5] Exit).
+In **ORBIT: Beyond the Unknown**, you take command of the deep-space reconnaissance vessel **ODYSSEY-07** to investigate an unidentified extraterrestrial transmission originating from the Kepler-186 system.
 
-### Phase 2: Core Game Models & Command Center (Completed)
-* [x] **Player Model (`Player.java`)**: Commander identity and default vessel (`ODYSSEY-07`).
-* [x] **Spaceship Model (`Spaceship.java`)**: Core vitals (Fuel, O2, Energy, Hull), resource consumption, restoration, damage, and operational checks.
-* [x] **Planet Model (`Planet.java`)**: Planetary telemetry, descriptions, and discovery/exploration status.
-* [x] **Game State (`GameState.java`)**: Active session manager tracking Player, Spaceship, current location, and 5 celestial bodies.
-* [x] **Command Center Dashboard (`Game.java`)**: Interactive command operations hub with real-time vitals and diagnostic telemetry.
-
-### Phase 3: Navigation System & Galaxy Map (Completed)
-* [x] **Scripted Mars Authorization Directive**: Earth starts as only discovered world; opening Navigation unlocks Mars via priority High-Command transmission.
-* [x] **Interplanetary Navigation System (`Game.java`)**: Flight trajectory calculations, Earth ↔ Mars transit (20 fuel cost), departure and orbital insertion animations.
-* [x] **Stellar Cartography & Galaxy Map (`Game.java`)**: Dynamic ASCII orbital map grid, sector catalog, and legend.
-* [x] **Resource Thresholds (`Spaceship.java`, `TerminalUI.java`)**: Standardized 0% (Depleted), 1–25% (Critical), 26–50% (Caution), >50% (Normal).
-
-### Phase 4: Cargo & Inventory Management System (Completed)
-* [x] **Inventory Model (`src/orbit/models/Inventory.java`)**: Safe tracking of 5 supply categories (Metal, Energy Cells, Oxygen Canisters, Fuel Cells, Alien Artifacts), bounds checking, and restoration rules.
-* [x] **GameState Integration (`GameState.java`)**: Starter supply loadout (2 Metal, 2 Energy Cells, 2 Oxygen Canisters, 2 Fuel Cells, 0 Artifacts) preserved across sessions.
-* [x] **Interactive Cargo Hold Screen (`Game.java`)**: Manifest display, item consumption with validation and confirmation, technical specification details.
-
-### Phase 5: Planetary Exploration & Random Event System (Completed)
-* [x] **Exploration Interface (`Game.java`)**: Added `[5] EXPLORE PLANET` to Command Center; restricted to Earth and Mars.
-* [x] **Expedition Mechanics**: 10 Energy, 5 Oxygen consumption, pre-launch confirmation, resource depletion protection, repeated surveys supported.
-* [x] **Random Event System (`src/orbit/models/ExplorationEvent.java`)**: 12 predefined atmospheric events (Discovery, Resource, Hazard, Encounter) with safe vitals modification.
-* [x] **Galaxy Map Integration**: Explored world indicators on ASCII map grid and planetary catalog.
-
-### Phase 6: Mission Objectives, Campaign Progression & Mission Log (Completed)
-* [x] **Mission Objective Model (`src/orbit/models/MissionObjective.java`)**:
-  * Structured objective tracking with IDs, titles, descriptions, stages, statuses (`PENDING`, `IN_PROGRESS`, `COMPLETED`), and progress info.
-  * 12 official campaign objectives from `project.md` across 3 stages:
-    * **Stage 1 — Departure**: *Launch from Earth*, *Travel to Mars*, *Complete Initial Exploration*, *Collect Basic Resources*.
-    * **Stage 2 — Deep Space Exploration**: *Explore Europa*, *Visit Titan*, *Collect Required Materials*, *Discover Unidentified Transmission*.
-    * **Stage 3 — Beyond the Unknown**: *Travel to Kepler-186f*, *Investigate the Signal*, *Discover Signal Source*, *Make Final Mission Decision*.
-* [x] **Campaign Progression & Dynamic Stage Advancement (`GameState.java`)**:
-  * Evaluates gameplay actions automatically without manual player intervention.
-  * Advances from **Stage 1** to **Stage 2** immediately upon completing all 4 Stage 1 requirements.
-  * Automatically transitions Stage 2 objectives from `PENDING` to `IN_PROGRESS` on milestone completion.
-  * Unimplemented destinations (Europa, Titan, Kepler-186f) remain properly locked / pending.
-  * Dynamic overall mission progress percentage calculated: `(completed / 12) * 100%`.
-* [x] **Chronological Flight Recorder (`src/orbit/models/MissionLog.java`)**:
-  * Session-relative sequential timestamps (`LOG-001`, `LOG-002`, ...).
-  * Color-coded category tags (`MISSION`, `NAVIGATION`, `DISCOVERY`, `RESOURCE`, `HAZARD`, `ENCOUNTER`, `SIGNAL`).
-  * Deduplication guards against consecutive repeated logs and screen reopening.
-  * Supports both chronological (oldest-first) and reverse chronological (newest-first) views.
-* [x] **Command Center Integration & Terminal Dashboards (`Game.java`)**:
-  * **Mission Objectives Dashboard (`[6]`)**: Displays stage title, overall progress bar, tactical directives (next mandatory action), active/completed/pending sections, and detailed stage drill-downs.
-  * **Mission Log Screen (`[7]`)**: Paginated audit trail (8 entries per page), sort order toggling, and clean empty-state messaging.
-  * **Gameplay Event Hooks**: Automatically logs commissioning, Mars discovery, orbital burn departures, arrival insertions, surface excursions, resource recoveries, hazards, signal detection, and stage advancement.
-  * **Active Session Continuity**: Returning to Main Menu and selecting Continue Game preserves all objectives and flight logs.
-
-### Phase 8: Save/Load, Campaign Completion & Multiple Endings (Completed)
-* [x] **Persistent Save/Load System (`src/orbit/models/SaveManager.java`)**:
-  * Core Java deterministic serialization to `saves/orbit_save.dat`.
-  * Preserves commander, vessel, all 4 vitals, location, planets discovered/explored, cargo supplies, objectives, stage, decision flags, and complete mission log.
-  * Overwrite protection with pre-save metadata summary confirmation.
-  * Graceful handling of missing or corrupted save files.
-* [x] **Full Campaign Progression (Stages 1–3)**:
-  * **Stage 2 (Deep Space Exploration)**: Unlocks Europa and Titan; custom travel routes (25 Fuel each); outer planet exploration and material harvesting.
-  * **Stage 3 (Beyond the Unknown)**: Unlocks extrasolar destination Kepler-186f (30 Fuel); surface reconnaissance investigates carrier frequency (1420.405 MHz); secures the Alien Artifact.
-* [x] **Three Distinct Endings**:
-  * **Ending A (Successful Return)**: Artifact secured, spacecraft operational and $\ge 20$ Fuel; returns home to Sol, launching humanity into an interstellar golden age.
-  * **Ending B (Lost in Space)**: Artifact secured, but insufficient resources/fuel or spacecraft casualty; vessel drifts into the interstellar void with beacon active.
-  * **Ending C (The Unknown)**: Commander enters the alien gateway on Kepler-186f; transcends human space-time to join the ancient creators.
-  * Each ending features custom narrative sequences, debriefing summary, flight log entry, 100% mission completion, and prevention of repeated triggers.
-* [x] **Seamless Session Continuity**:
-  * Main Menu `[2] CONTINUE GAME` restores saved campaigns.
-  * Completed campaigns offer full debriefing review (summary, flight log).
-  * New games can be initialized cleanly anytime without corrupting archives.
+### Key Features
+* **Cinematic 3D Environments**:
+  * Rotating planetary spheres with multi-layer cloud dynamics and atmospheric rim shaders.
+  * Multi-depth starfields with parallax drift.
+  * Real-time 3D spacecraft maneuvering and engine exhaust particle glow.
+  * Specialized 3D environments: Tactical Bridge, Planetary Navigation Cartography, Industrial Cargo Bay, Surface Reconnaissance, and the Kepler Alien Monolith.
+* **Diegetic Sci-Fi Interface**:
+  * Responsive Scene2D holographic flight decks with custom vector typography.
+  * Live 4-resource telemetry instruments (Fuel, Oxygen, Energy, Hull Integrity) with critical threshold monitoring.
+* **Authoritative Campaign Mechanics**:
+  * **Stage 1 (Departure)**: Launch from Earth, decode high-command trajectory briefing, and execute the 20-fuel burn to Mars.
+  * **Stage 2 (Deep Space Exploration)**: Journey to Europa and Titan, gather rare minerals, and detect the carrier signal.
+  * **Stage 3 (Beyond the Unknown)**: Jump to extrasolar destination Kepler-186f and retrieve the Alien Artifact.
+* **Three Narrative Endings**:
+  * **Ending A — Successful Return**: Earth orbit homecoming, surviving crew, interstellar renaissance.
+  * **Ending B — Lost in Space**: Adrift in the void, emergency distress beacon pulsing in darkness.
+  * **Ending C — The Unknown**: Planetary spire transcendence into extraterrestrial consciousness.
 
 ---
 
-## 5. How to Compile and Run
+## 3. Technology Stack & Architecture
 
-Ensure you have **Java 17** or newer installed (`java -version`, `javac -version`).
+* **Engine**: libGDX 1.14.2 (LWJGL3 backend)
+* **Graphics**: Hardware-accelerated OpenGL 3.3 / OpenGL ES 2.0 with custom GLSL ES 1.00 shaders
+* **Audio**: Tactical avionics sound synthesis and multi-channel UI feedback via OpenAL
+* **UI**: libGDX Scene2D with custom `CinematicTheme` components (`HoloButton`, `ShipResourceGauge`, `TelemetryReadout`)
+* **Persistence**: Non-blocking deterministic text serialization via `SaveManager`
 
-### From the Project Root (`Orbit/`)
+---
 
-#### Windows (PowerShell / Command Prompt):
+## 4. Building and Running from Source (Developer Workflow)
+
+If you wish to compile or modify the application from source:
+
+### Prerequisites
+* JDK 21 or JDK 25 installed (`javac -version`).
+* Git.
+
+### Gradle Commands
+From the project root:
+
 ```powershell
-# 1. Compile all source files into bin directory
-javac -d bin src/orbit/models/*.java src/orbit/ui/*.java src/orbit/*.java
+# Run the Desktop LWJGL3 game in development mode:
+.\gradlew.bat runDesktop
 
-# 2. Run the application
-java -cp bin orbit.Main
+# Compile production classes:
+.\gradlew.bat classes
+
+# Create unpacked application distribution (build/install/orbit):
+.\gradlew.bat installDist
+
+# Create distribution ZIP (build/distributions/orbit-1.0.0.zip):
+.\gradlew.bat distZip
 ```
 
-Alternatively, direct recursive compilation:
+### Creating the Self-Contained Windows Release via `jpackage`
 ```powershell
-javac -d bin (Get-ChildItem -Recurse -Filter *.java src).FullName
-java -cp bin orbit.Main
-```
+# 1. Build application distribution
+.\gradlew.bat installDist
 
-#### Linux / macOS (Bash / Zsh):
-```bash
-# 1. Compile
-javac -d bin $(find src -name "*.java")
+# 2. Generate minimal JRE using jlink
+jlink --add-modules java.base,java.desktop,java.logging,java.management,jdk.unsupported,java.naming,java.xml `
+      --strip-debug --no-man-pages --no-header-files --output build/runtime
 
-# 2. Run
-java -cp bin orbit.Main
+# 3. Package native Windows application image
+jpackage --type app-image --name ORBIT --app-version 1.0.0 `
+         --runtime-image build/runtime --input build/install/orbit/lib `
+         --main-jar orbit-1.0.0.jar --main-class orbit.desktop.DesktopLauncher `
+         --dest build/distribution
+
+# 4. Copy assets & launcher scripts
+Copy-Item -Recurse -Force assets build\distribution\ORBIT\assets
+New-Item -ItemType Directory -Force build\distribution\ORBIT\saves
 ```
 
 ---
 
-## 6. Development Roadmap
+## 5. Verification & Quality Assurance
 
-* **Phase 1: Project Foundation** (Complete) — Base architecture, Terminal UI framework, boot sequence, main menu navigation.
-* **Phase 2: Core Game Models & Dashboard** (Complete) — Player, Spaceship, Planet, GameState, and Command Center dashboard.
-* **Phase 3: Navigation System & Galaxy Map** (Complete) — Interplanetary travel (Earth ↔ Mars), Mars unlock briefing, ASCII galaxy map, 25% critical resource thresholding.
-* **Phase 4: Cargo & Inventory Management** (Complete) — Inventory model, 5 supply categories, item consumption & vitals restoration, manifest view.
-* **Phase 5: Planetary Exploration & Anomalies** (Complete) — Surface landing, 12 random events (Discovery, Resource, Hazard, Encounter), Galaxy Map explored tracking.
-* **Phase 6: Mission Objectives & Mission Log** (Complete) — 12 campaign objectives, 3 stages, dynamic progression, chronological flight recorder, pagination.
-* **Phase 7: Space Hazards & Encounters** (Complete) — Environmental hazard alerts across 4 vitals (Fuel, O2, Energy, Hull), interactive countermeasure deployment & cargo mitigation, operational casualty check & expedition inhibition, narrative tactical encounter choices, and zero-fictional-reward compliance.
-* **Phase 8: Game Persistence & Multiple Endings** (Complete) — Core Java Save/load in `saves/`, Stage 2 & 3 campaign progression (Europa, Titan, Kepler-186f), signal source discovery & Alien Artifact, Endings A, B, and C with distinct narrative sequences, debriefing review screen.
+The standalone release has undergone end-to-end verification via the automated `Phase89Verifier` test suite:
+1. **Clean Production Build**: Verified.
+2. **Bundled Runtime Launch**: Verified (OpenJDK 25 LTS executing `ORBIT.exe` without system Java).
+3. **Main Menu Initialization**: Verified (3D planetary scene, starfield, Scene2D interface).
+4. **Expedition Commissioning**: Verified (Commander registration, starter loadout).
+5. **Planetary Navigation & Mars Unlock**: Verified (Trajectory decryption briefing, 20 fuel transit burn, arrival insertion).
+6. **Cargo Hold Deck**: Verified (5 inventory categories, consumption vitals restoration).
+7. **Exploration Operations**: Verified (10 Energy + 5 Oxygen expedition cost, surface event handling).
+8. **Mission Control & Mission Log**: Verified (Objective progress tracking, chronological audit trail).
+9. **All Three Cinematic Endings**: Verified (Authoritative eligibility rules, 3D scenes, debriefing dialogs).
+10. **Save / Load Persistence**: Verified (`saves/orbit_save.dat` integrity).
 
 ---
 
-## 7. License & Credits
+## 6. License & Credits
 
-(C) 2026 ORBIT Development Team. Built for terminal exploration enthusiasts.
-
+(C) 2026 ORBIT Development Team. Engineered for space exploration enthusiasts.

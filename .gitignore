@@ -4,6 +4,7 @@ bin/
 out/
 target/
 build/
+.gradle/
 
 # IDE configurations
 .idea/
@@ -21,8 +22,11 @@ ehthumbs.db
 saves/*
 !saves/.gitkeep
 
-# Assets (preserve directory structure while ignoring temporary files)
-assets/*
+# Assets (preserve static audio and visual assets while ignoring temporary files)
+assets/temp/
+assets/cache/
+!assets/audio/
+!assets/audio/*
 !assets/.gitkeep
 
 # Logs and crash reports
@@ -31,3 +35,8 @@ hs_err_pid*
 
 # Antigravity configuration
 .agent/
+
+# Distribution & Release artifacts
+dist/
+release/
+

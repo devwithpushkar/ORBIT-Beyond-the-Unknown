@@ -72,6 +72,7 @@ public class SaveManager {
             String ship = "Unknown";
             String location = "Unknown";
             String stage = "Unknown";
+            String completedEnding = null;
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
@@ -83,7 +84,15 @@ public class SaveManager {
                     location = line.substring("current=".length()).trim();
                 } else if (line.startsWith("stage=")) {
                     stage = line.substring("stage=".length()).trim();
+                } else if (line.startsWith("completed_ending=")) {
+                    String ending = line.substring("completed_ending=".length()).trim();
+                    if (!ending.equalsIgnoreCase("NONE") && !ending.isEmpty()) {
+                        completedEnding = ending;
+                    }
                 }
+            }
+            if (completedEnding != null) {
+                return String.format("Commander %s | Ship %s | Location: %s | %s [%s]", commander, ship, location, stage, completedEnding);
             }
             return String.format("Commander %s | Ship %s | Location: %s | %s", commander, ship, location, stage);
         } catch (Exception e) {

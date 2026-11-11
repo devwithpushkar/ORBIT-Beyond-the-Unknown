@@ -1,0 +1,72 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'orbit'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
+}
+
+ext {
+    gdxVersion = '1.14.2'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+        resources {
+            srcDirs = ['assets']
+        }
+    }
+}
+
+dependencies {
+    // libGDX Core & Desktop LWJGL3
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
+    // FreeType for vector sci-fi typography
+    implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+}
+
+application {
+    mainClass = 'orbit.desktop.DesktopLauncher'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+task runDesktop(type: JavaExec) {
+    mainClass = 'orbit.desktop.DesktopLauncher'
+    classpath = sourceSets.main.runtimeClasspath
+    workingDir = rootDir
+}
+
+task runSwing(type: JavaExec) {
+    mainClass = 'orbit.ui.OrbitFrame'
+    classpath = sourceSets.main.runtimeClasspath
+    workingDir = rootDir
+}
+
+task runTerminal(type: JavaExec) {
+    mainClass = 'orbit.Main'
+    classpath = sourceSets.main.runtimeClasspath
+    workingDir = rootDir
+    standardInput = System.in
+}
+
